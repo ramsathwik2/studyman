@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Windows XP</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23f35325' d='M0 4h7V0H0zM0 12h7V8H0zM8 4h8V0H8zM8 12h8V8H8z'/%3E%3Cpath fill='%2381bc06' d='M0 8h7V4H0zM8 8h8V4H8z'/%3E%3Cpath fill='%2305a6f0' d='M0 16h7V12H0zM8 16h8V12H8z'/%3E%3Cpath fill='%23ffba08' d='M0 12h7V8H0zM8 12h8V8H8z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="static/xp.css">
+</head>
+<body class="desktop">
+
+<!-- ===================== WALLPAPER ===================== -->
+<div id="bliss" aria-hidden="true"></div>
+
+<!-- ===================== DESKTOP ICONS ===================== -->
+<div id="desktop">
+  <div class="dicon sel" data-name="My Documents" tabindex="0">
+    <span class="di-ic mydocs"></span><span class="di-t">My Documents</span>
+  </div>
+  <div class="dicon" data-name="My Computer" tabindex="0">
+    <span class="di-ic mycomputer"></span><span class="di-t">My Computer</span>
+  </div>
+  <div class="dicon" data-name="My Network Places" tabindex="0">
+    <span class="di-ic netplaces"></span><span class="di-t">My Network Places</span>
+  </div>
+  <div class="dicon" data-name="Recycle Bin" tabindex="0">
+    <span class="di-ic recycle"></span><span class="di-t">Recycle Bin</span>
+  </div>
+  <div class="dicon" data-name="Internet Explorer" tabindex="0">
+    <span class="di-ic ie"></span><span class="di-t">Internet Explorer</span>
+  </div>
+  <div class="dicon" data-name="Flashcards" tabindex="0">
+    <span class="di-ic fc"></span><span class="di-t">Flashcards</span>
+  </div>
+  <div class="dicon" data-name="Notes" tabindex="0">
+    <span class="di-ic notes"></span><span class="di-t">Notes</span>
+  </div>
+  <div class="dicon" data-name="Chat" tabindex="0">
+    <span class="di-ic chat"></span><span class="di-t">Chat</span>
+  </div>
+  <div class="dicon" data-name="Study Guide" tabindex="0">
+    <span class="di-ic guide"></span><span class="di-t">Study Guide</span>
+  </div>
+</div>
+
+<!-- desktop windows layer -->
+<div id="windows-layer"></div>
+
+<!-- desktop marquee / drag box -->
+<div id="dragbox"></div>
+
+<!-- ===================== BOOT SCREEN ===================== -->
+<div id="boot">
+  <div class="boot-logo">
+    <svg viewBox="0 0 50 50"><path fill="#f35325" d="M0 13h25V0H0z"/><path fill="#81bc06" d="M25 13h25V0H25z"/><path fill="#05a6f0" d="M0 38h25V25H0z"/><path fill="#ffba08" d="M25 38h25V25H25z"/></svg>
+  </div>
+  <div class="boot-bar"><i></i></div>
+</div>
+
+<!-- ===================== TASKBAR ===================== -->
+<div id="taskbar">
+  <button id="start-btn">
+    <span class="flag"><svg viewBox="0 0 16 16"><path fill="#f35325" d="M0 4h7V0H0zM0 12h7V8H0zM8 4h8V0H8zM8 12h8V8H8z"/><path fill="#81bc06" d="M0 8h7V4H0zM8 8h8V4H8z"/><path fill="#05a6f0" d="M0 16h7V12H0zM8 16h8V12H8z"/><path fill="#ffba08" d="M0 12h7V8H0zM8 12h8V8H8z"/></svg></span>
+    <span class="st-label">start</span>
+  </button>
+  <div class="ql-sep"></div>
+  <div id="quicklaunch">
+    <button class="ql" data-app="ie" title="Internet Explorer"><span class="di-ic ie sm"></span></button>
+    <button class="ql" data-app="notepad" title="Notepad"><span class="di-ic notepad sm"></span></button>
+    <button class="ql" data-app="mydocs" title="My Documents"><span class="di-ic mydocs sm"></span></button>
+    <button class="ql" data-app="sounds" title="Windows Media Player"><span class="di-ic wmp sm"></span></button>
+  </div>
+  <div id="taskbtns"></div>
+  <div id="tray">
+    <button class="tray-item" id="tray-sound" title="Volume">&#128266;</button>
+    <button class="tray-item">EN</button>
+    <span class="tray-clock" id="tray-clock">1:00 PM</span>
+  </div>
+</div>
+
+<!-- ===================== START MENU ===================== -->
+<div id="start-menu" hidden>
+  <div class="sm-head">
+    <div class="sm-userbox">
+      <div class="sm-avatar">XP</div>
+      <div class="sm-user">Administrator</div>
+    </div>
+    <div class="sm-flag"><svg viewBox="0 0 50 50"><path fill="#f35325" d="M0 13h25V0H0z"/><path fill="#81bc06" d="M25 13h25V0H25z"/><path fill="#05a6f0" d="M0 38h25V25H0z"/><path fill="#ffba08" d="M25 38h25V25H25z"/></svg><span>Windows<span>&nbsp;XP</span></span></div>
+  </div>
+  <div class="sm-body">
+    <div class="sm-links">
+      <button class="sm-item" data-app="internet">Internet<br>Internet Explorer</button>
+      <button class="sm-item" data-app="email">E-mail<br>Microsoft Outlook</button>
+      <button class="sm-item" data-app="mydocs">My Documents</button>
+      <button class="sm-item" data-app="mypics">My Pictures</button>
+      <button class="sm-item" data-app="mymusic">My Music</button>
+      <button class="sm-item" data-app="computer">My Computer</button>
+      <button class="sm-item" data-app="notepad">Notepad</button>
+      <button class="sm-item" data-app="paint">Paint</button>
+      <button class="sm-item" data-app="mediaplayer">Windows Media Player</button>
+      <button class="sm-item" data-app="movie">Windows Movie Maker</button>
+      <button class="sm-item" data-app="help">Help and Support</button>
+      <button class="sm-item" data-app="search">Search</button>
+      <button class="sm-item" data-app="run">Run&hellip;</button>
+      <button class="sm-item" id="all-programs-btn">All Programs <span class="ap-arrow">&#9656;</span></button>
+    </div>
+    <div class="sm-foot">
+      <button class="sm-logoff">Log Off <span class="lg-arrow">&#9656;</span></button>
+      <button class="sm-shutdown" id="sm-shutdown">Turn Off Computer <span class="lg-arrow">&#9656;</span></button>
+    </div>
+  </div>
+  <div id="all-programs" hidden></div>
+</div>
+
+<!-- ===================== CONTEXT MENU ===================== -->
+<div id="ctxmenu" hidden></div>
+
+<!-- ===================== SHUTDOWN DIALOG ===================== -->
+<div id="shutdown" class="modal hidden">
+  <div class="modal-frame">
+    <div class="titlebar"><span class="wtitle">Turn off computer</span><button class="wctl close" data-act="close">&#10005;</button></div>
+    <div class="modal-body">
+      <div class="shut-cap">What do you want the computer to do?</div>
+      <div class="shut-btns">
+        <button class="shut-btn" data-act="standby"><span class="ic">&#8986;</span><span>Stand By</span></button>
+        <button class="shut-btn" data-act="restart"><span class="ic">&#128260;</span><span>Restart</span></button>
+        <button class="shut-btn" data-act="off"><span class="ic">&#128280;</span><span>Turn Off</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== XP DIALOG (generic) ===================== -->
+<div id="xdialog" class="modal hidden">
+  <div class="modal-frame small">
+    <div class="titlebar"><span class="wtitle" id="xdialog-title">Windows XP</span><button class="wctl close" data-act="close">&#10005;</button></div>
+    <div class="modal-body">
+      <div class="xmsg" id="xdialog-msg">Welcome to Windows XP.</div>
+      <div class="xbtns" id="xdialog-btns"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CLOCK / CALENDAR ===================== -->
+<div id="calpop" hidden>
+  <div class="cal-head" id="cal-head">August 2026</div>
+  <div id="cal-grid"></div>
+  <div class="cal-clock" id="cal-big">1:00:00 PM</div>
+</div>
+
+<script src="static/store.js"></script>
+<script src="static/ai.js"></script>
+<script src="static/ingest.js"></script>
+<script src="static/vendor/pdf.min.js"></script>
+<script src="static/vendor/mammoth.browser.min.js"></script>
+<script src="static/vendor/jszip.min.js"></script>
+<script src="static/shell.js"></script>
+<script src="static/flashcards.js"></script>
+<script src="static/paint.js"></script>
+<script src="static/notes.js"></script>
+<script src="static/chat.js"></script>
+<script src="static/guide.js"></script>
+<script src="static/library.js"></script>
+<script src="static/audio.js"></script>
+</body>
+</html>

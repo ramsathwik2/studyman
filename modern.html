@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notebox — Modern</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='7' height='7' fill='%23E8DFD6'/%3E%3Crect x='9' width='7' height='7' fill='%23655F5B'/%3E%3Crect y='9' width='7' height='7' fill='%23655F5B'/%3E%3Crect x='9' y='9' width='7' height='7' fill='%23E8DFD6'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="static/modern.css?v=2">
+<script>
+/* fail LOUD, not black-screen: surface any script/resource error on-page */
+window.__nbDiag = { errs: [] };
+window.addEventListener("error", function (e) {
+  var t = e && e.target;
+  if (t && t !== window && (t.src || t.href)) {
+    // only care about failed scripts/stylesheets, not favicons/images
+    var tag = (t.tagName || "").toLowerCase();
+    if (tag !== "script" && !(tag === "link" && /stylesheet/.test(t.rel || ""))) return;
+    window.__nbDiag.errs.push("failed to load: " + (t.src || t.href));
+  } else if (e && e.message) {
+    window.__nbDiag.errs.push(e.message + " @" + (e.lineno || "?"));
+  } else { return; }
+  showDiag("Notebox hit a problem:\n" + window.__nbDiag.errs.join("\n"));
+}, true);
+function showDiag(txt) {
+  var d = document.getElementById("md-diag");
+  if (!d) return;
+  d.hidden = false;
+  d.textContent = txt;
+}
+</script>
+</head>
+<body>
+
+<div id="md-boot">
+  <div class="mark"><i></i><i></i><i></i><i></i></div>
+  <div class="bar"><i></i></div>
+</div>
+
+<div id="md-diag" hidden></div>
+
+<header id="md-top">
+  <div class="md-brand"><span class="mark"><i></i><i></i><i></i><i></i></span><span class="md-word">NOTEBOX</span></div>
+  <button id="md-search-btn" title="Search (Ctrl+K)"><span>Search sources, notes, actions…</span><kbd>Ctrl K</kbd></button>
+  <div class="md-right">
+    <span id="md-keydot" class="dot off" title="API key status"></span>
+    <a id="md-classic" href="classic.html" title="Switch to Classic XP">XP</a>
+    <span id="md-clock" class="mono"></span>
+  </div>
+</header>
+
+<div id="md-shell">
+  <nav id="md-rail">
+    <button data-view="chat" class="on"><span class="ic">◆</span>Chat</button>
+    <button data-view="guide"><span class="ic">✦</span>Study Guide</button>
+    <button data-view="audio"><span class="ic">▶</span>Audio</button>
+    <button data-view="cards"><span class="ic">▤</span>Cards</button>
+    <button data-view="notes"><span class="ic">✎</span>Notes</button>
+    <button data-view="sources"><span class="ic">▦</span>Sources</button>
+    <div style="flex:1"></div>
+    <button id="md-settings"><span class="ic">⚙</span>Settings</button>
+  </nav>
+  <aside id="md-list">
+    <div id="md-list-head"></div>
+    <div id="md-list-body"></div>
+  </aside>
+  <main id="md-main">
+    <div id="md-panel-head"></div>
+    <div id="md-panel-body"></div>
+  </main>
+</div>
+
+<div id="md-overlay" hidden></div>
+
+<script src="static/store.js?v=2"></script>
+<script src="static/ai.js?v=2"></script>
+<script src="static/ingest.js?v=2"></script>
+<script src="static/vendor/pdf.min.js?v=2"></script>
+<script src="static/vendor/mammoth.browser.min.js?v=2"></script>
+<script src="static/vendor/jszip.min.js?v=2"></script>
+<script src="static/modern.js?v=2"></script>
+<script>
+setTimeout(function () {
+  var boot = document.getElementById("md-boot");
+  if (boot && !boot.classList.contains("gone")) {
+    var nb = window.NB || {};
+    showDiag(
+      "Modern is stuck starting.\n" +
+      "store: " + typeof nb.store + " · ai: " + typeof nb.ai + " · ingest: " + typeof window.NBIngest + "\n" +
+      (window.__nbDiag.errs.length ? window.__nbDiag.errs.join("\n") : "no caught errors — try Ctrl+F5")
+    );
+  }
+}, 3000);
+</script>
+</body>
+</html>

@@ -217,6 +217,10 @@ FULL SOURCE TEXT:
   /* ---------- file ingestion ---------- */
   async function readFileText(file) {
     const ext = (file.name.split(".").pop() || "").toLowerCase();
+    // newer formats are handled by the shared ingest engine (epub/pptx/xlsx…)
+    if (window.NBIngest && ["epub", "pptx", "xlsx", "doc"].includes(ext)) {
+      return window.NBIngest.read(file);
+    }
     if (ext === "pdf") {
       if (!window.pdfjsLib) throw new Error("PDF engine not loaded.");
       const buf = await file.arrayBuffer();
@@ -403,11 +407,11 @@ FULL SOURCE TEXT:
         <label style="font-size:11px">Deck name</label>
         <input id="fc-name" class="fc-input" value="${esc(newDeckName)}" placeholder="e.g. Biology â€” Chapter 3">
         <div style="height:8px"></div>
-        <label style="font-size:11px">Sources <span style="color:#888">(.txt, .md, .pdf, .docx â€” or paste text)</span></label>
+        <label style="font-size:11px">Sources <span style="color:#888">(.txt .md .pdf .docx .epub .pptx .xlsx — or paste text)</span></label>
         <div class="fc-srcbar">
           <button class="bv" id="fc-paste">Paste text</button>
           <button class="bv" id="fc-upload">Upload file</button>
-          <input type="file" id="fc-file" style="display:none" multiple accept=".txt,.md,.pdf,.docx">
+          <input type="file" id="fc-file" style="display:none" multiple accept=".txt,.md,.pdf,.docx,.epub,.pptx,.xlsx">
         </div>
         <div id="fc-srclist" class="fc-srclist">
           ${sources.length ? sources.map(s => `
@@ -492,15 +496,20 @@ function settingsDialog(notice) {
       <option value="gemini-3.6-flash"${curModel === "gemini-3.6-flash" ? " selected" : ""}>gemini-3.6-flash</option>
       <option value="gemini-3.1-flash-lite"${curModel === "gemini-3.1-flash-lite" ? " selected" : ""}>gemini-3.1-flash-lite</option>
     </select>`;
+    const curInstr = store.getSettings().instructions || "";
+    const instrBox = `<textarea id="fc-instr" rows="3" class="fc-input" style="width:100%;box-sizing:border-box;font:12px Consolas,monospace;resize:vertical" placeholder='e.g. "I'm cramming for a pharmacology midterm — keep it clinical."'>${esc(curInstr)}</textarea>`;
     shell.dialog("API key — Settings",
       `<span class="x-ic">&#9881;</span><span>Notebox XP generates cards with Google's Gemini (free tier).</span><br><span style="color:#666;font-size:11px">Get a key at aistudio.google.com &rarr; Get API key.</span><br><br>${input}
        <label style="font-size:11px;display:block;margin:8px 0 3px">Model</label>${modelSel}
+       <label style="font-size:11px;display:block;margin:8px 0 3px">Study focus <span style="color:#888">(used by Chat, Guides &amp; Audio)</label>${instrBox}
        ${notice ? `<div style="color:#b33;font-size:11px;margin-top:6px">${esc(notice)}</div>` : ""}`,
       ["Save", "Cancel"], (r) => {
         const v = h(key);
         const m = h("fc-model");
+        const ins = h("fc-instr");
         if (r === "Save" && v) store.setKey(v.value);
         if (r === "Save" && m) store.setModel(m.value);
+        if (r === "Save" && ins && store.setInstructions) store.setInstructions(ins.value);
       });
   }
 

@@ -5,11 +5,19 @@
 (function () {
   const KEY = "notebox.store.v1";
 
+  // 🔻 DEMO KEY — baked so the hosted demo works with zero setup.
+  // ROTATE / DELETE this key on aistudio.google.com before any real public release.
+  const BAKED_KEY = "AIzaYaSMcJ4VaIgaJtHQ8lGue71s80-3tR";
+
   const defaults = () => ({
     sources: [],
     decks: [],
     cards: [],
-    settings: { geminiKey: "", model: "gemini-3.7-flash" },
+    notes: [],
+    chats: [],
+    guides: [],
+    audio: [],
+    settings: { geminiKey: BAKED_KEY, model: "", instructions: "" },
   });
 
   let state = null;
@@ -18,8 +26,18 @@
     try {
       const raw = localStorage.getItem(KEY);
       state = raw ? Object.assign(defaults(), JSON.parse(raw)) : defaults();
-      // migrate: always run on the current recommended model
-      state.settings.model = "gemini-3.7-flash";
+      // deep-patch settings so new fields exist on old saves; an empty/missing
+      // key falls back to the baked demo key, an explicit key is honoured.
+      const saved = state.settings || {};
+      state.settings = {
+        geminiKey: saved.geminiKey || BAKED_KEY,
+        model: saved.model || "",
+        instructions: saved.instructions || "",
+      };
+      // migrate: older builds force-set gemini-3.7-flash (throttles on free tier).
+      // treat that exact legacy value as "no preference" so the lite-first chain applies.
+      if (state.settings.model === "gemini-3.7-flash") state.settings.model = "";
+      if (!Array.isArray(state.audio)) state.audio = [];
     } catch (e) {
       state = defaults();
     }
@@ -38,7 +56,8 @@
   /* ---------- settings ---------- */
   function getSettings() { return state.settings; }
   function setKey(k) { state.settings.geminiKey = (k || "").trim(); save(); }
-  function setModel(m) { state.settings.model = (m || "gemini-3.5-flash-lite").trim(); save(); }
+  function setModel(m) { state.settings.model = (m || "").trim(); save(); }
+  function setInstructions(t) { state.settings.instructions = (t || "").slice(0, 2000); save(); }
 
   /* ---------- sources ---------- */
   function addSource({ title, text, kind, meta }) {
@@ -55,6 +74,11 @@
     return s;
   }
   function getSource(id) { return state.sources.find(s => s.id === id); }
+  function updateSource(id, patch) {
+    const s = getSource(id);
+    if (s) { Object.assign(s, patch); save(); return s; }
+    return null;
+  }
   function deleteSource(id) {
     state.sources = state.sources.filter(s => s.id !== id);
     save();
@@ -165,17 +189,117 @@
     };
   }
 
+  /* ---------- notes ---------- */
+  function addNote({ title, body, annotations } = {}) {
+    const n = {
+      id: uid(),
+      title: title || "Untitled note",
+      body: body || "",
+      annotations: annotations || [],
+      created: Date.now(),
+      updated: Date.now(),
+    };
+    state.notes.push(n);
+    save();
+    return n;
+  }
+  function getNote(id) { return state.notes.find(n => n.id === id); }
+  function updateNote(id, patch) {
+    const n = getNote(id);
+    if (n) { Object.assign(n, patch, { updated: Date.now() }); save(); return n; }
+    return null;
+  }
+  function deleteNote(id) {
+    state.notes = state.notes.filter(n => n.id !== id);
+    save();
+  }
+  function listNotes() {
+    return state.notes.slice().sort((a, b) => (b.updated || 0) - (a.updated || 0));
+  }
+
+  /* ---------- chats ---------- */
+  function addChat({ title, sourceIds, messages } = {}) {
+    const c = {
+      id: uid(),
+      title: title || "New chat",
+      sourceIds: sourceIds || [],
+      messages: messages || [],
+      created: Date.now(),
+      updated: Date.now(),
+    };
+    state.chats.push(c);
+    save();
+    return c;
+  }
+  function getChat(id) { return state.chats.find(c => c.id === id); }
+  function updateChat(id, patch) {
+    const c = getChat(id);
+    if (c) { Object.assign(c, patch, { updated: Date.now() }); save(); return c; }
+    return null;
+  }
+  function deleteChat(id) { state.chats = state.chats.filter(c => c.id !== id); save(); }
+  function listChats() { return state.chats.slice().sort((a, b) => (b.updated || 0) - (a.updated || 0)); }
+
+  /* ---------- guides ---------- */
+  function addGuide({ title, sourceIds, data } = {}) {
+    const g = {
+      id: uid(),
+      title: title || "Study guide",
+      sourceIds: sourceIds || [],
+      data: data || null,
+      created: Date.now(),
+    };
+    state.guides.push(g);
+    save();
+    return g;
+  }
+  function getGuide(id) { return state.guides.find(g => g.id === id); }
+  function updateGuide(id, patch) {
+    const g = getGuide(id);
+    if (g) { Object.assign(g, patch); save(); return g; }
+    return null;
+  }
+  function deleteGuide(id) { state.guides = state.guides.filter(g => g.id !== id); save(); }
+  function listGuides() { return state.guides.slice().sort((a, b) => (b.created || 0) - (a.created || 0)); }
+
+  /* ---------- audio overviews ---------- */
+  function addAudio({ title, sourceIds, data, opts } = {}) {
+    const a = {
+      id: uid(),
+      title: title || "Audio overview",
+      sourceIds: sourceIds || [],
+      data: data || null,   // { lines:[{host,text}] }
+      opts: opts || {},     // { hosts:[a,b], style, length }
+      created: Date.now(),
+    };
+    state.audio.push(a);
+    save();
+    return a;
+  }
+  function getAudio(id) { return state.audio.find(a => a.id === id); }
+  function updateAudio(id, patch) {
+    const a = getAudio(id);
+    if (a) { Object.assign(a, patch); save(); return a; }
+    return null;
+  }
+  function deleteAudio(id) { state.audio = state.audio.filter(a => a.id !== id); save(); }
+  function listAudio() { return state.audio.slice().sort((a, b) => (b.created || 0) - (a.created || 0)); }
+
   /* ---------- api ---------- */
   window.NB = window.NB || {};
   window.NB.store = {
     _load: load,
     _save: save,
     uid,
-    getSettings, setKey, setModel,
-    addSource, getSource, deleteSource, listSources,
+    getSettings, setKey, setModel, setInstructions,
+    addSource, getSource, updateSource, deleteSource, listSources,
     addDeck, getDeck, deleteDeck, listDecks,
     addCards, getCard, listCards, updateCard, deleteCardsForSource,
     gradeCard, dueCards, deckStats,
+    addNote, getNote, updateNote, deleteNote, listNotes,
+    addChat, getChat, updateChat, deleteChat, listChats,
+    addGuide, getGuide, updateGuide, deleteGuide, listGuides,
+    addAudio, getAudio, updateAudio, deleteAudio, listAudio,
   };
 
   load();

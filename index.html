@@ -3,147 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Windows XP</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23f35325' d='M0 4h7V0H0zM0 12h7V8H0zM8 4h8V0H8zM8 12h8V8H8z'/%3E%3Cpath fill='%2381bc06' d='M0 8h7V4H0zM8 8h8V4H8z'/%3E%3Cpath fill='%2305a6f0' d='M0 16h7V12H0zM8 16h8V12H8z'/%3E%3Cpath fill='%23ffba08' d='M0 12h7V8H0zM8 12h8V8H8z'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="static/xp.css">
+<title>Notebox</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='7' height='7' fill='%23E8DFD6'/%3E%3Crect x='9' width='7' height='7' fill='%23655F5B'/%3E%3Crect y='9' width='7' height='7' fill='%23655F5B'/%3E%3Crect x='9' y='9' width='7' height='7' fill='%23E8DFD6'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#141210; --card:#1F1D1B; --line:rgba(255,255,255,.07);
+    --txt:#F1ECEC; --sub:#B7B1B1; --mut:#656363;
+    --mono:"Cascadia Code",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,"Segoe UI Variable","Segoe UI",Inter,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--txt);font-family:var(--sans);
+       display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .wrap{display:flex;flex-direction:column;align-items:center;gap:34px;
+        animation:fadein .6s ease both}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+  .mark{display:grid;grid-template-columns:15px 15px;grid-gap:4px}
+  .mark i{width:15px;height:15px;border-radius:2px;display:block}
+  .mark i:nth-child(1),.mark i:nth-child(4){background:#E8DFD6}
+  .mark i:nth-child(2),.mark i:nth-child(3){background:#655F5B}
+  h1{font-size:13px;font-weight:600;letter-spacing:.42em;color:var(--sub);
+     font-family:var(--mono);text-transform:uppercase;text-indent:.42em;text-align:center}
+  .bar{width:220px;height:2px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+  .bar i{display:block;height:100%;width:40%;border-radius:2px;background:#E8DFD6;
+         animation:load 1.5s cubic-bezier(.4,0,.2,1) forwards}
+  @keyframes load{from{width:4%}to{width:100%}}
+  /* chooser */
+  #chooser{position:fixed;inset:0;background:var(--bg);display:none;
+           flex-direction:column;align-items:center;justify-content:center;gap:44px}
+  #chooser.on{display:flex;animation:fadein .45s ease both}
+  .cards{display:flex;gap:22px}
+  .pick{width:300px;background:var(--card);border:1px solid var(--line);border-radius:16px;
+        padding:30px 26px;cursor:pointer;color:var(--txt);text-align:left;
+        transition:transform .18s ease,border-color .18s ease,background .18s ease}
+  .pick:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.18);background:#262320}
+  .pick .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.28em;color:var(--mut);
+           text-transform:uppercase;margin-bottom:14px}
+  .pick .t{font-size:19px;font-weight:650;margin-bottom:8px}
+  .pick .d{font-size:12.5px;line-height:1.65;color:var(--sub)}
+  .pick.modern .t::after{content:" ●";color:#E8DFD6;font-size:11px;vertical-align:middle}
+  .foot{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--mut)}
+</style>
 </head>
-<body class="desktop">
+<body>
+  <div class="wrap" id="bootwrap">
+    <div class="mark"><i></i><i></i><i></i><i></i></div>
+    <h1>Notebox</h1>
+    <div class="bar"><i></i></div>
+  </div>
 
-<!-- ===================== WALLPAPER ===================== -->
-<div id="bliss" aria-hidden="true"></div>
-
-<!-- ===================== DESKTOP ICONS ===================== -->
-<div id="desktop">
-  <div class="dicon sel" data-name="My Documents" tabindex="0">
-    <span class="di-ic mydocs"></span><span class="di-t">My Documents</span>
-  </div>
-  <div class="dicon" data-name="My Computer" tabindex="0">
-    <span class="di-ic mycomputer"></span><span class="di-t">My Computer</span>
-  </div>
-  <div class="dicon" data-name="My Network Places" tabindex="0">
-    <span class="di-ic netplaces"></span><span class="di-t">My Network Places</span>
-  </div>
-  <div class="dicon" data-name="Recycle Bin" tabindex="0">
-    <span class="di-ic recycle"></span><span class="di-t">Recycle Bin</span>
-  </div>
-  <div class="dicon" data-name="Internet Explorer" tabindex="0">
-    <span class="di-ic ie"></span><span class="di-t">Internet Explorer</span>
-  </div>
-  <div class="dicon" data-name="Flashcards" tabindex="0">
-    <span class="di-ic fc"></span><span class="di-t">Flashcards</span>
-  </div>
-</div>
-
-<!-- desktop windows layer -->
-<div id="windows-layer"></div>
-
-<!-- desktop marquee / drag box -->
-<div id="dragbox"></div>
-
-<!-- ===================== BOOT SCREEN ===================== -->
-<div id="boot">
-  <div class="boot-logo">
-    <svg viewBox="0 0 50 50"><path fill="#f35325" d="M0 13h25V0H0z"/><path fill="#81bc06" d="M25 13h25V0H25z"/><path fill="#05a6f0" d="M0 38h25V25H0z"/><path fill="#ffba08" d="M25 38h25V25H25z"/></svg>
-  </div>
-  <div class="boot-bar"><i></i></div>
-</div>
-
-<!-- ===================== TASKBAR ===================== -->
-<div id="taskbar">
-  <button id="start-btn">
-    <span class="flag"><svg viewBox="0 0 16 16"><path fill="#f35325" d="M0 4h7V0H0zM0 12h7V8H0zM8 4h8V0H8zM8 12h8V8H8z"/><path fill="#81bc06" d="M0 8h7V4H0zM8 8h8V4H8z"/><path fill="#05a6f0" d="M0 16h7V12H0zM8 16h8V12H8z"/><path fill="#ffba08" d="M0 12h7V8H0zM8 12h8V8H8z"/></svg></span>
-    <span class="st-label">start</span>
-  </button>
-  <div class="ql-sep"></div>
-  <div id="quicklaunch">
-    <button class="ql" data-app="ie" title="Internet Explorer"><span class="di-ic ie sm"></span></button>
-    <button class="ql" data-app="notepad" title="Notepad"><span class="di-ic notepad sm"></span></button>
-    <button class="ql" data-app="mydocs" title="My Documents"><span class="di-ic mydocs sm"></span></button>
-    <button class="ql" data-app="sounds" title="Windows Media Player"><span class="di-ic wmp sm"></span></button>
-  </div>
-  <div id="taskbtns"></div>
-  <div id="tray">
-    <button class="tray-item" id="tray-sound" title="Volume">&#128266;</button>
-    <button class="tray-item">EN</button>
-    <span class="tray-clock" id="tray-clock">1:00 PM</span>
-  </div>
-</div>
-
-<!-- ===================== START MENU ===================== -->
-<div id="start-menu" hidden>
-  <div class="sm-head">
-    <div class="sm-userbox">
-      <div class="sm-avatar">XP</div>
-      <div class="sm-user">Administrator</div>
+  <div id="chooser">
+    <h1 style="letter-spacing:.42em">Choose your workspace</h1>
+    <div class="cards">
+      <button class="pick" id="go-classic">
+        <div class="k">Retro</div>
+        <div class="t">Classic XP</div>
+        <div class="d">The full desktop. Bliss wallpaper, draggable windows, taskbar, Paint — everything you remember.</div>
+      </button>
+      <button class="pick modern" id="go-modern">
+        <div class="k">Studio</div>
+        <div class="t">Modern</div>
+        <div class="d">A quiet, focused space. Dark, minimal, fast — Chat, Guides, Audio, Cards and Sources without the noise.</div>
+      </button>
     </div>
-    <div class="sm-flag"><svg viewBox="0 0 50 50"><path fill="#f35325" d="M0 13h25V0H0z"/><path fill="#81bc06" d="M25 13h25V0H25z"/><path fill="#05a6f0" d="M0 38h25V25H0z"/><path fill="#ffba08" d="M25 38h25V25H25z"/></svg><span>Windows<span>&nbsp;XP</span></span></div>
+    <div class="foot">ESC · CLASSIC &nbsp;&nbsp;|&nbsp;&nbsp; ENTER · MODERN</div>
   </div>
-  <div class="sm-body">
-    <div class="sm-links">
-      <button class="sm-item" data-app="internet">Internet<br>Internet Explorer</button>
-      <button class="sm-item" data-app="email">E-mail<br>Microsoft Outlook</button>
-      <button class="sm-item" data-app="mydocs">My Documents</button>
-      <button class="sm-item" data-app="mypics">My Pictures</button>
-      <button class="sm-item" data-app="mymusic">My Music</button>
-      <button class="sm-item" data-app="computer">My Computer</button>
-      <button class="sm-item" data-app="notepad">Notepad</button>
-      <button class="sm-item" data-app="paint">Paint</button>
-      <button class="sm-item" data-app="mediaplayer">Windows Media Player</button>
-      <button class="sm-item" data-app="movie">Windows Movie Maker</button>
-      <button class="sm-item" data-app="help">Help and Support</button>
-      <button class="sm-item" data-app="search">Search</button>
-      <button class="sm-item" data-app="run">Run&hellip;</button>
-      <button class="sm-item" id="all-programs-btn">All Programs <span class="ap-arrow">&#9656;</span></button>
-    </div>
-    <div class="sm-foot">
-      <button class="sm-logoff">Log Off <span class="lg-arrow">&#9656;</span></button>
-      <button class="sm-shutdown" id="sm-shutdown">Turn Off Computer <span class="lg-arrow">&#9656;</span></button>
-    </div>
-  </div>
-  <div id="all-programs" hidden></div>
-</div>
 
-<!-- ===================== CONTEXT MENU ===================== -->
-<div id="ctxmenu" hidden></div>
-
-<!-- ===================== SHUTDOWN DIALOG ===================== -->
-<div id="shutdown" class="modal hidden">
-  <div class="modal-frame">
-    <div class="titlebar"><span class="wtitle">Turn off computer</span><button class="wctl close" data-act="close">&#10005;</button></div>
-    <div class="modal-body">
-      <div class="shut-cap">What do you want the computer to do?</div>
-      <div class="shut-btns">
-        <button class="shut-btn" data-act="standby"><span class="ic">&#8986;</span><span>Stand By</span></button>
-        <button class="shut-btn" data-act="restart"><span class="ic">&#128260;</span><span>Restart</span></button>
-        <button class="shut-btn" data-act="off"><span class="ic">&#128280;</span><span>Turn Off</span></button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ===================== XP DIALOG (generic) ===================== -->
-<div id="xdialog" class="modal hidden">
-  <div class="modal-frame small">
-    <div class="titlebar"><span class="wtitle" id="xdialog-title">Windows XP</span><button class="wctl close" data-act="close">&#10005;</button></div>
-    <div class="modal-body">
-      <div class="xmsg" id="xdialog-msg">Welcome to Windows XP.</div>
-      <div class="xbtns" id="xdialog-btns"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ===================== CLOCK / CALENDAR ===================== -->
-<div id="calpop" hidden>
-  <div class="cal-head" id="cal-head">August 2026</div>
-  <div id="cal-grid"></div>
-  <div class="cal-clock" id="cal-big">1:00:00 PM</div>
-</div>
-
-<script src="static/store.js"></script>
-<script src="static/vendor/pdf.min.js"></script>
-<script src="static/vendor/mammoth.browser.min.js"></script>
-<script src="static/shell.js"></script>
-<script src="static/flashcards.js"></script>
-<script src="static/paint.js"></script>
+<script>
+  setTimeout(() => {
+    document.getElementById("bootwrap").style.display = "none";
+    const c = document.getElementById("chooser");
+    c.classList.add("on");
+    document.getElementById("go-classic").addEventListener("click", () => location.href = "classic.html");
+    document.getElementById("go-modern").addEventListener("click", () => location.href = "modern.html");
+    addEventListener("keydown", function h(e){
+      if (!c.classList.contains("on")) return removeEventListener("keydown", h);
+      if (e.key === "Escape") location.href = "classic.html";
+      if (e.key === "Enter") location.href = "modern.html";
+    });
+  }, 1600);
+</script>
 </body>
 </html>

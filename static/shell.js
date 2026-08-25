@@ -58,10 +58,10 @@
     el.className = "win";
     el.id = id;
     el.dataset.app = opts.app || "app";
-    el.style.left = opts.left || (120 + (Windows.length * 26) % 160) + "px";
-    el.style.top  = opts.top  || (60 + (Windows.length * 22) % 90) + "px";
-    el.style.width = opts.width || 480 + "px";
-    el.style.height = opts.height || 340 + "px";
+    el.style.left = (opts.left || (120 + (Windows.length * 26) % 160)) + "px";
+    el.style.top  = (opts.top  || (60 + (Windows.length * 22) % 90)) + "px";
+    el.style.width = (opts.width || 480) + "px";
+    el.style.height = (opts.height || 340) + "px";
 
     el.innerHTML = `
       <div class="titlebar">
@@ -269,6 +269,9 @@
       "My Documents": () => openWindow({ title: "My Documents", icon: '<div class="wicon"></div>', width: 560, height: 380 }),
       "Flashcards": () => launchApp("flashcards"),
       "Paint": () => launchApp("paint"),
+      "Notes": () => launchApp("notes"),
+      "Chat": () => launchApp("chat"),
+      "Study Guide": () => launchApp("guide"),
     };
     (map[name] || (() => openWindow({ title: name, icon: "", width: 460, height: 340 })))();
   }
